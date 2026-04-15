@@ -7,5 +7,5 @@ export default defineConfig({
     tailwindcss(),
    
   ],
-  base: '/ICP_page/'
+  base: '/Page_ICP/'
 })
