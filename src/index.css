@@ -1,0 +1,162 @@
+/* ═══════════════════════════════════════════════════════
+   ICP GT — Global Styles
+   Paleta: Navy #0B1F3A · Gold #C9A84C · Off-white #F4F6F9
+   ═══════════════════════════════════════════════════════ */
+
+:root {
+  --navy:       #0B1F3A;
+  --navy-mid:   #1A3A6C;
+  --gold:       #C9A84C;
+  --gold-light: #E2C97A;
+  --off-white:  #F4F6F9;
+  --text-dark:  #1A2332;
+  --text-mid:   #4A5568;
+  --text-light: #94A3B8;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--off-white);
+  color: var(--text-dark);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: 'Montserrat', 'Inter', sans-serif;
+}
+
+/* ─── Scroll Reveal Animations ──────────────────────── */
+/* Uniform 0.5 s fade + 20 px lift — clean, not distracting */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-24px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.reveal-left.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reveal-right {
+  opacity: 0;
+  transform: translateX(24px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.reveal-right.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ─── Blueprint Grid Background ─────────────────────── */
+/* 5 % opacity — engineering motif, never competes with content */
+.blueprint-bg {
+  background-image:
+    linear-gradient(rgba(201, 168, 76, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201, 168, 76, 0.05) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* ─── Section Title Utilities ────────────────────────── */
+.section-title {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.gold-accent {
+  display: block;
+  width: 56px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  border-radius: 2px;
+}
+
+/* ─── Button Styles ──────────────────────────────────── */
+.btn-gold {
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+  color: var(--navy);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  cursor: pointer;
+  display: inline-block;
+  text-decoration: none;
+}
+.btn-gold:hover {
+  background: transparent;
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.btn-outline-gold {
+  background: transparent;
+  border: 2px solid var(--gold);
+  color: var(--gold);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: inline-block;
+  text-decoration: none;
+}
+.btn-outline-gold:hover {
+  background: var(--gold);
+  color: var(--navy);
+}
+
+/* ─── Engineering Card ───────────────────────────────── */
+.eng-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.eng-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* ─── Keyframe Animations ────────────────────────────── */
+@keyframes spin-cw {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes spin-ccw {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(-360deg); }
+}
+@keyframes loader-bar {
+  0%   { width: 0%; }
+  100% { width: 100%; }
+}
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+/* Gentle scroll-hint arrow — replaces Tailwind animate-bounce */
+@keyframes arrowNudge {
+  0%, 100% { transform: translateY(0); opacity: 0.5; }
+  55%       { transform: translateY(6px); opacity: 0.8; }
+}
+.arrow-nudge {
+  animation: arrowNudge 2.4s ease-in-out infinite;
+}
