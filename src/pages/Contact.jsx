@@ -1,13 +1,16 @@
 import { useState } from 'react';
 import { FaFacebook, FaInstagram, FaWhatsapp } from 'react-icons/fa';
-import { PhoneIcon, EnvelopeIcon, MapPinIcon } from '@heroicons/react/24/outline';
+import { PhoneIcon, EnvelopeIcon, MapPinIcon, CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/24/outline';
 import Reveal from '../components/Reveal';
+import { CONTACTO, REDES } from '../constants/config';
+
+const FORM_VACIO = { nombre: '', telefono: '', email: '', mensaje: '' };
+const ESTADO = { IDLE: 'idle', ENVIANDO: 'enviando', EXITO: 'exito', ERROR: 'error' };
 
 export default function Contact() {
-  const [form, setForm] = useState({ nombre: '', telefono: '', email: '', mensaje: '' });
+  const [form, setForm]     = useState(FORM_VACIO);
   const [errores, setErrores] = useState({});
-  const [enviando, setEnviando] = useState(false);
-  const [exito, setExito] = useState(false);
+  const [estado, setEstado] = useState(ESTADO.IDLE);
 
   const validar = () => {
     const e = {};
@@ -22,27 +25,43 @@ export default function Contact() {
 
   const manejarCambio = e => setForm({ ...form, [e.target.name]: e.target.value });
 
-  const manejarEnvio = e => {
+  const manejarEnvio = async (e) => {
     e.preventDefault();
     const v = validar();
     setErrores(v);
-    if (Object.keys(v).length === 0) {
-      setEnviando(true);
-      setTimeout(() => {
-        setEnviando(false);
-        setExito(true);
-        setForm({ nombre: '', telefono: '', email: '', mensaje: '' });
-        setTimeout(() => setExito(false), 5000);
-      }, 2000);
+    if (Object.keys(v).length > 0) return;
+
+    setEstado(ESTADO.ENVIANDO);
+    try {
+      await new Promise(resolve => setTimeout(resolve, 2200));
+      setForm(FORM_VACIO);
+      setEstado(ESTADO.EXITO);
+      setTimeout(() => setEstado(ESTADO.IDLE), 7000);
+    } catch {
+      setEstado(ESTADO.ERROR);
     }
   };
 
   const inputCls = field =>
-    `w-full px-4 py-3 bg-white border rounded text-sm text-gray-800 focus:outline-none transition-colors ${
+    `w-full px-4 py-3 bg-white border rounded text-sm text-gray-800 focus:outline-none transition-all duration-200 ${
       errores[field]
-        ? 'border-red-400 focus:border-red-500'
-        : 'border-gray-200 focus:border-[#C9A84C]'
+        ? 'border-red-400 focus:border-red-400 focus:shadow-[0_0_0_3px_rgba(239,68,68,0.10)]'
+        : 'border-gray-200 focus:border-[#C9A84C] focus:shadow-[0_0_0_3px_rgba(201,168,76,0.12)]'
     }`;
+
+  const enviando = estado === ESTADO.ENVIANDO;
+
+  const socialLinks = [
+    { href: REDES.facebook,  icon: FaFacebook,  label: 'Facebook' },
+    { href: REDES.instagram, icon: FaInstagram, label: 'Instagram' },
+    { href: REDES.whatsapp,  icon: FaWhatsapp,  label: 'WhatsApp' },
+  ];
+
+  const contactItems = [
+    { icon: PhoneIcon,    label: 'Teléfono',  value: CONTACTO.telefono,  href: CONTACTO.telefonoHref },
+    { icon: EnvelopeIcon, label: 'Correo',    value: CONTACTO.email,     href: CONTACTO.emailHref },
+    { icon: MapPinIcon,   label: 'Ubicación', value: CONTACTO.direccion, href: null },
+  ];
 
   return (
     <>
@@ -96,11 +115,7 @@ export default function Contact() {
             </p>
 
             <div className="space-y-5 mb-8">
-              {[
-                { icon: PhoneIcon,   label: 'Teléfono',   value: '+502 4029-3857',    href: 'tel:+50240293857' },
-                { icon: EnvelopeIcon,label: 'Correo',     value: 'info@ICPgt.com',href: 'mailto:info@ICPgt.com' },
-                { icon: MapPinIcon,  label: 'Ubicación',  value: 'Guatemala, Guatemala', href: null },
-              ].map(({ icon: Icon, label, value, href }) => (
+              {contactItems.map(({ icon: Icon, label, value, href }) => (
                 <div key={label} className="flex items-center gap-4">
                   <div
                     className="w-10 h-10 flex items-center justify-center rounded flex-shrink-0"
@@ -126,11 +141,7 @@ export default function Contact() {
             </div>
 
             <div className="flex gap-3">
-              {[
-                { href: '#', icon: FaFacebook, label: 'Facebook' },
-                { href: '#', icon: FaInstagram, label: 'Instagram' },
-                { href: 'https://wa.me/5020000000', icon: FaWhatsapp, label: 'WhatsApp' },
-              ].map(({ href, icon: Icon, label }) => (
+              {socialLinks.map(({ href, icon: Icon, label }) => (
                 <a
                   key={label}
                   href={href}
@@ -149,105 +160,141 @@ export default function Contact() {
           <Reveal direction="right">
             <div className="bg-white rounded shadow-sm border border-gray-100 p-8">
 
-              {enviando ? (
-                <div className="flex flex-col items-center justify-center h-64">
-                  <div className="relative w-12 h-12">
-                    <div className="absolute inset-0 rounded-full border-2 border-gray-100" />
-                    <div
-                      className="absolute inset-0 rounded-full"
-                      style={{
-                        borderWidth: 2,
-                        borderStyle: 'solid',
-                        borderColor: 'transparent',
-                        borderTopColor: '#C9A84C',
-                        animation: 'spin-cw 1s linear infinite',
-                      }}
-                    />
+              {/* ── Estado: EXITO ── */}
+              {estado === ESTADO.EXITO && (
+                <div
+                  className="mb-6 p-4 rounded flex items-start gap-3"
+                  style={{ background: 'rgba(16,185,129,0.06)', border: '1px solid rgba(16,185,129,0.25)' }}
+                >
+                  <CheckCircleIcon className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: '#059669' }} />
+                  <div>
+                    <p className="font-semibold text-sm" style={{ color: '#059669' }}>
+                      Mensaje enviado correctamente
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Nos pondremos en contacto en menos de 24 horas.
+                    </p>
                   </div>
-                  <p className="mt-4 text-gray-500 text-sm">Enviando mensaje...</p>
                 </div>
-              ) : (
-                <>
-                  {exito && (
-                    <div className="mb-6 p-4 rounded text-sm font-medium text-center"
-                         style={{ background: 'rgba(16,185,129,0.06)', border: '1px solid rgba(16,185,129,0.2)', color: '#059669' }}>
-                      Mensaje enviado. Nos pondremos en contacto pronto.
-                    </div>
-                  )}
-
-                  <form onSubmit={manejarEnvio} noValidate className="space-y-4">
-                    {/* Nombre */}
-                    <div>
-                      <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">
-                        Nombre completo
-                      </label>
-                      <input
-                        type="text"
-                        name="nombre"
-                        value={form.nombre}
-                        onChange={manejarCambio}
-                        className={inputCls('nombre')}
-                        placeholder="Tu nombre"
-                      />
-                      {errores.nombre && <p className="text-[11px] text-red-500 mt-1">{errores.nombre}</p>}
-                    </div>
-
-                    {/* Tel + Email */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">
-                          Teléfono
-                        </label>
-                        <input
-                          type="tel"
-                          name="telefono"
-                          value={form.telefono}
-                          onChange={manejarCambio}
-                          className={inputCls('telefono')}
-                          placeholder="Número"
-                        />
-                        {errores.telefono && <p className="text-[11px] text-red-500 mt-1">{errores.telefono}</p>}
-                      </div>
-                      <div>
-                        <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">
-                          Correo
-                        </label>
-                        <input
-                          type="email"
-                          name="email"
-                          value={form.email}
-                          onChange={manejarCambio}
-                          className={inputCls('email')}
-                          placeholder="email@ejemplo.com"
-                        />
-                        {errores.email && <p className="text-[11px] text-red-500 mt-1">{errores.email}</p>}
-                      </div>
-                    </div>
-
-                    {/* Mensaje */}
-                    <div>
-                      <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">
-                        Mensaje
-                      </label>
-                      <textarea
-                        name="mensaje"
-                        value={form.mensaje}
-                        onChange={manejarCambio}
-                        className={`${inputCls('mensaje')} h-32 resize-none`}
-                        placeholder="Cuéntanos sobre tu proyecto..."
-                      />
-                      {errores.mensaje && <p className="text-[11px] text-red-500 mt-1">{errores.mensaje}</p>}
-                    </div>
-
-                    <button
-                      type="submit"
-                      className="w-full btn-gold py-3 px-6 rounded text-xs uppercase tracking-widest"
-                    >
-                      Enviar Mensaje
-                    </button>
-                  </form>
-                </>
               )}
+
+              {/* ── Estado: ERROR ── */}
+              {estado === ESTADO.ERROR && (
+                <div
+                  className="mb-6 p-4 rounded flex items-start gap-3"
+                  style={{ background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.25)' }}
+                >
+                  <ExclamationCircleIcon className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: '#DC2626' }} />
+                  <div>
+                    <p className="font-semibold text-sm" style={{ color: '#DC2626' }}>
+                      No fue posible enviar el mensaje
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Por favor intenta de nuevo o escríbenos a{' '}
+                      <a href={CONTACTO.emailHref} className="underline hover:text-[#C9A84C]">
+                        {CONTACTO.email}
+                      </a>.
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              <form onSubmit={manejarEnvio} noValidate className="space-y-4">
+                {/* Nombre */}
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">
+                    Nombre completo
+                  </label>
+                  <input
+                    type="text"
+                    name="nombre"
+                    value={form.nombre}
+                    onChange={manejarCambio}
+                    disabled={enviando}
+                    className={inputCls('nombre')}
+                    placeholder="Tu nombre"
+                  />
+                  {errores.nombre && <p className="text-[11px] text-red-500 mt-1">{errores.nombre}</p>}
+                </div>
+
+                {/* Tel + Email */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">
+                      Teléfono
+                    </label>
+                    <input
+                      type="tel"
+                      name="telefono"
+                      value={form.telefono}
+                      onChange={manejarCambio}
+                      disabled={enviando}
+                      className={inputCls('telefono')}
+                      placeholder="Número"
+                    />
+                    {errores.telefono && <p className="text-[11px] text-red-500 mt-1">{errores.telefono}</p>}
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">
+                      Correo
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={form.email}
+                      onChange={manejarCambio}
+                      disabled={enviando}
+                      className={inputCls('email')}
+                      placeholder="email@ejemplo.com"
+                    />
+                    {errores.email && <p className="text-[11px] text-red-500 mt-1">{errores.email}</p>}
+                  </div>
+                </div>
+
+                {/* Mensaje */}
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">
+                    Mensaje
+                  </label>
+                  <textarea
+                    name="mensaje"
+                    value={form.mensaje}
+                    onChange={manejarCambio}
+                    disabled={enviando}
+                    className={`${inputCls('mensaje')} h-32 resize-none`}
+                    placeholder="Cuéntanos sobre tu proyecto..."
+                  />
+                  {errores.mensaje && <p className="text-[11px] text-red-500 mt-1">{errores.mensaje}</p>}
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={enviando}
+                  className="w-full btn-gold py-3 px-6 rounded text-xs uppercase tracking-widest flex items-center justify-center gap-2"
+                  style={{ opacity: enviando ? 0.75 : 1, cursor: enviando ? 'not-allowed' : 'pointer' }}
+                >
+                  {enviando ? (
+                    <>
+                      <svg
+                        className="animate-spin -ml-1 mr-3 h-5 w-5 text-[#C9A84C]"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        />
+                      </svg>
+                      Enviando...
+                    </>
+                  ) : (
+                    'Enviar Mensaje'
+                  )}
+                </button>
+              </form>
             </div>
           </Reveal>
         </div>

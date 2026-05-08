@@ -13,22 +13,15 @@ export default function ICPLogo() {
   return (
     <div className="flex flex-col items-center" style={{ animation: 'fadeSlideUp 0.7s ease 0.1s both' }}>
       {/* ICP letters — padding-top reserves room for the floating helmet */}
-      <div className="flex items-baseline" style={{ paddingTop: 'clamp(3.5rem, 8vw, 6rem)' }}>
+      <div className="flex items-baseline pt-28 sm:pt-36 md:pt-44 lg:pt-48">
 
         {/* I with helmet above */}
         <div className="relative inline-block">
           <img
             src={cascoImg}
             alt="Casco de seguridad ICP"
-            className="icp-helmet absolute"
-            style={{
-              /* Scale with viewport: ~80px mobile → ~130px desktop */
-              width: 'clamp(4.5rem, 9vw, 8rem)',
-              height: 'auto',
-              bottom: '88%',
-              left: '50%',
-              /* translateX(-50%) is embedded in the CSS keyframe */
-            }}
+            className="icp-helmet absolute h-auto w-28 sm:w-36 md:w-44 lg:w-48"
+            style={{ bottom: '90%', left: '50%' }}
           />
           <span style={{ ...letterStyle, color: '#ffffff' }}>I</span>
         </div>

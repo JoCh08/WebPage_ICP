@@ -1,54 +1,108 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import Reveal from '../components/Reveal';
+import { SERVICIOS } from '../constants/config';
 
-const base = import.meta.env.BASE_URL;
+function ServiceCard({ servicio, standalone }) {
+  const [imgLoaded, setImgLoaded] = useState(false);
+  const Icon = servicio.icono;
 
-const servicios = [
-  {
-    titulo: 'Instalaciones GLP',
-    descripcion: 'Diseño e instalación de sistemas de gas licuado de petróleo para hogares y empresas.',
-    imagen: `${base}img/underConstruction.jpg`,
-    url: 'instalaciones-glp',
-  },
-  {
-    titulo: 'Sistemas Contra Incendios',
-    descripcion: 'Implementación de sistemas de prevención y combate contra incendios certificados.',
-    imagen: `${base}img/underConstruction.jpg`,
-    url: 'sistemas-contra-incendios',
-  },
-  {
-    titulo: 'Hidrocarburos',
-    descripcion: 'Infraestructura para el manejo seguro de hidrocarburos líquidos y gaseosos.',
-    imagen: `${base}img/underConstruction.jpg`,
-    url: 'hidrocarburos',
-  },
-  {
-    titulo: 'Instalaciones Hidrosanitarias',
-    descripcion: 'Soluciones eficientes en agua potable, drenaje y ventilación.',
-    imagen: `${base}img/underConstruction.jpg`,
-    url: 'hidrosanitarias',
-  },
-  {
-    titulo: 'Plantas de Tratamiento PTAR-PTAP',
-    descripcion: 'Diseño e instalación de plantas de tratamiento de aguas residuales y potables.',
-    imagen: `${base}img/underConstruction.jpg`,
-    url: 'plantas-tratamiento',
-  },
-  {
-    titulo: 'Tanques Metálicos Elevados',
-    descripcion: 'Sistemas de almacenamiento y distribución de agua en altura.',
-    imagen: `${base}img/underConstruction.jpg`,
-    url: 'tanques-metalicos',
-  },
-];
+  const borderIdle  = standalone ? 'rgba(201,168,76,0.15)' : 'rgba(255,255,255,0.08)';
+  const borderHover = 'rgba(201,168,76,0.5)';
+
+  return (
+    <Link
+      to={`/nuestros-servicios/${servicio.id}`}
+      className="group block rounded overflow-hidden eng-card"
+      style={{
+        background:   standalone ? '#FFFFFF' : 'rgba(255,255,255,0.04)',
+        border:       `1px solid ${borderIdle}`,
+        transition:   'transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease',
+      }}
+      onMouseEnter={e => {
+        e.currentTarget.style.borderColor = borderHover;
+        e.currentTarget.style.boxShadow   = standalone
+          ? '0 20px 48px rgba(0,0,0,0.12)'
+          : '0 20px 48px rgba(0,0,0,0.35)';
+        e.currentTarget.style.transform   = 'translateY(-5px)';
+      }}
+      onMouseLeave={e => {
+        e.currentTarget.style.borderColor = borderIdle;
+        e.currentTarget.style.boxShadow   = '';
+        e.currentTarget.style.transform   = '';
+      }}
+    >
+      {/* ── Image ── */}
+      <div className="relative h-52 overflow-hidden">
+        {!imgLoaded && (
+          <div className={`absolute inset-0 ${standalone ? 'skeleton-light' : 'skeleton-dark'}`} />
+        )}
+        <img
+          src={servicio.imagen}
+          alt={servicio.titulo}
+          loading="lazy"
+          onLoad={() => setImgLoaded(true)}
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          style={{ opacity: imgLoaded ? 1 : 0 }}
+        />
+        {/* Gradient overlay — darkens from bottom for legibility */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'linear-gradient(to top, rgba(11,31,58,0.80) 0%, rgba(11,31,58,0.2) 55%, transparent 100%)',
+          }}
+        />
+        {/* Icon badge — anchored bottom-left over the gradient */}
+        <div
+          className="absolute bottom-4 left-4 w-10 h-10 flex items-center justify-center rounded transition-transform duration-300 group-hover:scale-110"
+          style={{
+            background:  '#C9A84C',
+            boxShadow:   '0 4px 14px rgba(201,168,76,0.45)',
+          }}
+        >
+          <Icon className="w-5 h-5" style={{ color: '#0B1F3A' }} />
+        </div>
+      </div>
+
+      {/* ── Content ── */}
+      <div className="p-6">
+        {/* Animated gold accent line */}
+        <div
+          className="h-0.5 mb-4 rounded transition-all duration-500 group-hover:w-14"
+          style={{ width: 28, background: '#C9A84C' }}
+        />
+        <h3
+          className="font-bold text-base mb-2.5 section-title leading-snug"
+          style={{ color: standalone ? '#0B1F3A' : '#FFFFFF' }}
+        >
+          {servicio.titulo}
+        </h3>
+        <p
+          className="text-sm leading-relaxed mb-5"
+          style={{ color: standalone ? '#6B7280' : '#94A3B8' }}
+        >
+          {servicio.descripcionCorta}
+        </p>
+        <span
+          className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider transition-all duration-300 group-hover:gap-3"
+          style={{ color: '#C9A84C' }}
+        >
+          Ver más <ArrowRightIcon className="w-3 h-3" />
+        </span>
+      </div>
+    </Link>
+  );
+}
 
 /* standalone=true → shown at /nuestros-servicios (includes page header)
-   standalone=false (default) → embedded in Home (no header) */
-export default function Service({ standalone = false }) {
+   isHome=true     → embedded in Home; suppresses internal header, uses light card styling */
+export default function Service({ standalone = false, isHome = false }) {
+  const lightCards = standalone || isHome;
+
   return (
     <>
-      {/* Page header — only when route is /nuestros-servicios */}
       {standalone && (
         <section
           className="relative flex items-center justify-center"
@@ -80,12 +134,11 @@ export default function Service({ standalone = false }) {
         </section>
       )}
 
-      {/* Services grid */}
       <section
         className="py-24 px-4"
-        style={{ background: standalone ? '#F4F6F9' : '#0B1F3A' }}
+        style={{ background: standalone ? '#F4F6F9' : 'transparent' }}
       >
-        {!standalone && (
+        {!standalone && !isHome && (
           <Reveal>
             <div className="max-w-6xl mx-auto text-center mb-14">
               <p className="text-xs tracking-[0.35em] uppercase font-semibold mb-3" style={{ color: '#C9A84C' }}>
@@ -111,58 +164,9 @@ export default function Service({ standalone = false }) {
         )}
 
         <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {servicios.map((s, i) => (
-            <Reveal key={s.url} delay={i * 80}>
-              <Link
-                to={`/nuestros-servicios/${s.url}`}
-                className="group block rounded overflow-hidden transition-all duration-300 border hover:shadow-xl"
-                style={{
-                  background:     standalone ? '#FFFFFF' : 'rgba(255,255,255,0.04)',
-                  borderColor:    standalone ? '#F0F0F0' : 'rgba(255,255,255,0.08)',
-                  borderWidth: 1,
-                  borderStyle: 'solid',
-                }}
-              >
-                {/* Image */}
-                <div className="relative h-52 overflow-hidden">
-                  <img
-                    src={s.imagen}
-                    alt={s.titulo}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    loading="lazy"
-                  />
-                  <div
-                    className="absolute inset-0 transition-all duration-300"
-                    style={{ background: 'rgba(11,31,58,0.4)' }}
-                  />
-                </div>
-
-                {/* Content */}
-                <div className="p-6">
-                  <div
-                    className="h-0.5 mb-3 rounded transition-all duration-300 group-hover:w-14"
-                    style={{ width: 28, background: '#C9A84C' }}
-                  />
-                  <h3
-                    className="font-bold text-base mb-2 section-title"
-                    style={{ color: standalone ? '#0B1F3A' : '#FFFFFF' }}
-                  >
-                    {s.titulo}
-                  </h3>
-                  <p
-                    className="text-sm leading-relaxed mb-4"
-                    style={{ color: standalone ? '#6B7280' : '#9CA3AF' }}
-                  >
-                    {s.descripcion}
-                  </p>
-                  <span
-                    className="inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider transition-all duration-300 group-hover:gap-2"
-                    style={{ color: '#C9A84C' }}
-                  >
-                    Ver más <ArrowRightIcon className="w-3 h-3" />
-                  </span>
-                </div>
-              </Link>
+          {SERVICIOS.map((s, i) => (
+            <Reveal key={s.id} delay={i * 80}>
+              <ServiceCard servicio={s} standalone={lightCards} />
             </Reveal>
           ))}
         </div>

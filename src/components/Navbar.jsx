@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { PhoneIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { FaFacebook, FaWhatsapp } from 'react-icons/fa';
-import logo from '/src/assets/LogoDarck.png';
+import logo from '/src/assets/Casco.webp';
+import { CONTACTO, REDES } from '../constants/config';
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -10,13 +11,12 @@ export default function Navbar() {
   const { pathname } = useLocation();
 
   const navLinks = [
-    { path: '/',                  label: 'Inicio' },
-    { path: '/sobre-nosotros',    label: 'Sobre Nosotros' },
-    { path: '/nuestros-servicios',label: 'Servicios' },
-    { path: '/contactanos',       label: 'Contáctanos' },
+    { path: '/',                   label: 'Inicio' },
+    { path: '/sobre-nosotros',     label: 'Sobre Nosotros' },
+    { path: '/nuestros-servicios', label: 'Servicios' },
+    { path: '/contactanos',        label: 'Contáctanos' },
   ];
 
-  // Track scroll position for transparent→solid transition on Home
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -24,7 +24,6 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Close mobile menu on navigation
   useEffect(() => { setMenuOpen(false); }, [pathname]);
 
   const isHome = pathname === '/';
@@ -77,10 +76,7 @@ export default function Navbar() {
                   </span>
                   <span
                     className="absolute -bottom-0.5 left-0 h-[2px] rounded transition-all duration-300"
-                    style={{
-                      background: '#C9A84C',
-                      width: active ? '100%' : '0',
-                    }}
+                    style={{ background: '#C9A84C', width: active ? '100%' : '0' }}
                   />
                 </Link>
               );
@@ -90,22 +86,22 @@ export default function Navbar() {
           {/* ── Right: phone + socials ─────────────────── */}
           <div className="hidden md:flex items-center gap-4">
             <a
-              href="tel:+50200000000"
+              href={CONTACTO.telefonoHref}
               className="flex items-center gap-1.5 text-xs text-gray-300 transition-colors duration-300 hover:text-[#C9A84C]"
             >
               <PhoneIcon className="w-4 h-4" style={{ color: '#C9A84C' }} />
-              +502 0000-0000
+              {CONTACTO.telefono}
             </a>
             <div className="w-px h-4 bg-gray-700" />
             <a
-              href="https://www.facebook.com/profile.php?id=61557099803974"
+              href={REDES.facebook}
               target="_blank" rel="noreferrer" aria-label="Facebook"
               className="text-gray-500 hover:text-[#C9A84C] transition-colors"
             >
               <FaFacebook className="w-4 h-4" />
             </a>
             <a
-              href="https://wa.me/5020000000"
+              href={REDES.whatsapp}
               target="_blank" rel="noreferrer" aria-label="WhatsApp"
               className="text-gray-500 hover:text-[#C9A84C] transition-colors"
             >
@@ -148,17 +144,26 @@ export default function Navbar() {
             );
           })}
           <div className="flex items-center justify-between pt-3 mt-2 border-t border-white/10 px-4">
-            <a href="tel:+50240293857" className="flex items-center gap-2 text-xs text-gray-400">
+            <a
+              href={CONTACTO.telefonoHref}
+              className="flex items-center gap-2 text-xs text-gray-400"
+            >
               <PhoneIcon className="w-4 h-4" style={{ color: '#C9A84C' }} />
-              +502 0000-0000
+              {CONTACTO.telefono}
             </a>
             <div className="flex gap-3">
-              <a href="#" target="_blank" rel="noreferrer"
-                 className="text-gray-500 hover:text-[#C9A84C] transition-colors">
+              <a
+                href={REDES.facebook}
+                target="_blank" rel="noreferrer"
+                className="text-gray-500 hover:text-[#C9A84C] transition-colors"
+              >
                 <FaFacebook className="w-5 h-5" />
               </a>
-              <a href="https://wa.me/5020000000" target="_blank" rel="noreferrer"
-                 className="text-gray-500 hover:text-[#C9A84C] transition-colors">
+              <a
+                href={REDES.whatsapp}
+                target="_blank" rel="noreferrer"
+                className="text-gray-500 hover:text-[#C9A84C] transition-colors"
+              >
                 <FaWhatsapp className="w-5 h-5" />
               </a>
             </div>

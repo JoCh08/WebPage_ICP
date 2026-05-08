@@ -160,3 +160,35 @@ h1, h2, h3, h4, h5 {
 .arrow-nudge {
   animation: arrowNudge 2.4s ease-in-out infinite;
 }
+
+/* ─── Intro Overlay Animations ──────────────────────── */
+@keyframes introScale {
+  from { opacity: 0; transform: scale(0.88); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes scanLine {
+  0%   { opacity: 0; transform: translateY(-45vh); }
+  15%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { opacity: 0; transform: translateY(45vh); }
+}
+@keyframes cornerFadeIn {
+  from { opacity: 0; transform: scale(0.7); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* ─── Skeleton Shimmer ───────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+.skeleton-dark {
+  background: linear-gradient(90deg, #0B1F3A 25%, #1A3A6C 50%, #0B1F3A 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+.skeleton-light {
+  background: linear-gradient(90deg, #E5E7EB 25%, #F3F4F6 50%, #E5E7EB 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}

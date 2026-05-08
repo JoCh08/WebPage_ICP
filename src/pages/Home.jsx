@@ -11,7 +11,7 @@ const base = import.meta.env.BASE_URL;
 const images = [
   `${base}img/Instalacion.webp`,
   `${base}img/Painter.webp`,
-  `${base}constructio.jpg`,
+  `${base}img/underConstruction.jpg`,
 ];
 
 /* ── Slide indicator dot ── */
@@ -70,18 +70,23 @@ export default function Home() {
 
         <div className="relative z-10 flex flex-col items-center justify-center min-h-screen text-center px-6 pt-[72px]">
           <p
-            className="text-[10px] tracking-[0.48em] uppercase font-semibold mb-6"
+            className="text-xs tracking-[0.5em] uppercase font-semibold mb-6"
             style={{ color: '#C9A84C', animation: 'fadeSlideUp 0.5s ease 0.1s both' }}
           >
-            ICP Guatemala &nbsp;·&nbsp; Ingeniería de Alta Precisión
+            ICP GUATEMALA &nbsp;·&nbsp; PRECISIÓN ABSOLUTA
           </p>
 
           <h1
-            className="font-bold text-white leading-tight mb-5 section-title"
-            style={{ fontSize: 'clamp(2.25rem, 5.5vw, 3.75rem)', maxWidth: 800, animation: 'fadeSlideUp 0.5s ease 0.2s both' }}
+            className="font-extrabold text-white leading-tight mb-5 section-title"
+            style={{
+              fontSize:   'clamp(2.25rem, 5.5vw, 3.75rem)',
+              maxWidth:   800,
+              animation:  'fadeSlideUp 0.5s ease 0.2s both',
+              textShadow: '0 2px 24px rgba(0,0,0,0.45)',
+            }}
           >
-            Ingeniería Especializada<br className="hidden sm:block" /> en Proyectos de{' '}
-            <span style={{ color: '#C9A84C' }}>Alta Exigencia</span>
+            Materializamos Proyectos<br className="hidden sm:block" /> de{' '}
+            <span style={{ color: '#C9A84C' }}>Alta Complejidad.</span>
           </h1>
 
           <div
@@ -89,10 +94,11 @@ export default function Home() {
           />
 
           <p
-            className="text-gray-300 text-sm md:text-base max-w-2xl mb-10 leading-relaxed mx-auto"
+            className="text-gray-200 font-light text-sm md:text-base max-w-2xl mb-10 leading-relaxed mx-auto"
             style={{ animation: 'fadeSlideUp 0.5s ease 0.35s both' }}
           >
-            Soluciones integrales de ingeniería, supervisión y consultoría para proyectos residenciales, comerciales e industriales. Ejecutamos bajo los más altos estándares técnicos, garantizando rigor y seguridad en cada fase.
+            Soluciones integrales, supervisión y consultoría para el sector industrial y comercial.
+            Ejecutamos bajo los estándares más estrictos, garantizando rigor estructural y seguridad en cada fase.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4" style={{ animation: 'fadeSlideUp 0.5s ease 0.44s both' }}>
@@ -137,8 +143,7 @@ export default function Home() {
             </div>
           </Reveal>
           
-          {/* El componente de servicios ahora está en el lugar correcto */}
-          <ServiceSection />
+          <ServiceSection isHome={true} />
         </div>
       </section>
 
